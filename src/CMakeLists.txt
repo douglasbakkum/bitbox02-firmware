@@ -87,6 +87,7 @@ set(DBB-FIRMWARE-UI-SOURCES
     ${CMAKE_SOURCE_DIR}/src/ui/components/confirm_button.c
     ${CMAKE_SOURCE_DIR}/src/ui/components/keyboard_switch.c
     ${CMAKE_SOURCE_DIR}/src/ui/components/orientation_arrows.c
+    ${CMAKE_SOURCE_DIR}/src/ui/components/sensors.c
     ${CMAKE_SOURCE_DIR}/src/ui/components/info_centered.c
     ${CMAKE_SOURCE_DIR}/src/ui/components/menu.c
     ${CMAKE_SOURCE_DIR}/src/ui/components/status.c
