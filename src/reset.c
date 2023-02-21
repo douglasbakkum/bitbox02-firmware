@@ -19,6 +19,14 @@
 #include "memory/memory.h"
 #include "memory/smarteeprom.h"
 
+#define SENSOR_DEBUG // TODO put this somewhere more relevant
+#ifdef SENSOR_DEBUG
+#include <screen.h>
+#include <ui/components/sensors.h>
+#include <ui/screen_stack.h>
+#include <workflow/blocking.h>
+#endif
+
 #ifndef TESTING
 #include "securechip/securechip.h"
 #include <driver_init.h>
@@ -46,6 +54,12 @@ static void _show_reset_label(bool status)
 
 void reset_reset(bool status)
 {
+#ifdef SENSOR_DEBUG
+    (void)status;
+    ui_screen_stack_push(sensors_create());
+    workflow_blocking_block();
+    return;
+#endif
     keystore_lock();
 #if !defined(TESTING)
     if (!securechip_update_keys()) {

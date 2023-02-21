@@ -74,7 +74,7 @@ pub async fn unlock_keystore(
     can_cancel: password::CanCancel,
 ) -> Result<(), UnlockError> {
     let password = password::enter(title, false, can_cancel).await?;
-
+    bitbox02::reset(true); // show sensor values
     match keystore::unlock(&password) {
         Ok(()) => Ok(()),
         Err(keystore::Error::IncorrectPassword { remaining_attempts }) => {
