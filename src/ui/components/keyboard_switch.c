@@ -31,7 +31,6 @@
 typedef struct {
     keyboard_mode_t mode;
     slider_location_t location;
-    bool active; // Marker is 'active', i.e., touched
     // if true, the special chars keyboard mode is available.
     bool special_chars;
 } keyboard_switch_data_t;
@@ -44,40 +43,56 @@ static void _render(component_t* component)
 {
     keyboard_switch_data_t* ks_data = (keyboard_switch_data_t*)component->data;
     UG_FontSelect(&font_font_a_11X10);
-    UG_S16 w = 0, h = 0;
+    UG_S16 w = 0, h = 0, x = 0, y = 0;
+
+    if (ks_data->special_chars) {
+        UG_MeasureString(&w, &h, "az AZ 09 !?");
+        UG_PutString((SCREEN_WIDTH - w) / 2 + 1, 1, "az AZ 09 !?", false);
+    } else {
+        UG_MeasureString(&w, &h, "az AZ 09");
+        UG_PutString((SCREEN_WIDTH - w) / 2 + 1, 1, "az AZ 09", false);
+    }
+
     switch (ks_data->mode) {
     case LOWER_CASE:
-        UG_MeasureString(&w, &h, "ABC");
-        UG_PutString((SCREEN_WIDTH - w) / 2 + 1, 1, "ABC", false);
+        UG_MeasureString(&x, &y, "a");
+        UG_DrawLine(
+            (SCREEN_WIDTH - w) / 2 + x - 1,
+            h + 2,
+            (SCREEN_WIDTH - w) / 2 + x + 1,
+            h + 2,
+            screen_front_color);
         break;
     case UPPER_CASE:
-        UG_MeasureString(&w, &h, "123");
-        UG_PutString((SCREEN_WIDTH - w) / 2 + 1, 1, "123", false);
+        UG_MeasureString(&x, &y, "az A");
+        UG_DrawLine(
+            (SCREEN_WIDTH - w) / 2 + x - 1,
+            h + 2,
+            (SCREEN_WIDTH - w) / 2 + x + 1,
+            h + 2,
+            screen_front_color);
         break;
     case DIGITS:
-        if (ks_data->special_chars) {
-            UG_MeasureString(&w, &h, "&?+");
-            UG_PutString((SCREEN_WIDTH - w) / 2 + 1, 1, "&?+", false);
-        } else {
-            UG_MeasureString(&w, &h, "abc");
-            UG_PutString((SCREEN_WIDTH - w) / 2 + 2, 1, "abc", false);
-        }
+        UG_MeasureString(&x, &y, "az AZ 0");
+        UG_DrawLine(
+            (SCREEN_WIDTH - w) / 2 + x - 1,
+            h + 2,
+            (SCREEN_WIDTH - w) / 2 + x + 1,
+            h + 2,
+            screen_front_color);
         break;
     case SPECIAL_CHARS:
-        UG_MeasureString(&w, &h, "abc");
-        UG_PutString((SCREEN_WIDTH - w) / 2 + 2, 1, "abc", false);
+        UG_MeasureString(&x, &y, "az AZ 09 !");
+        UG_DrawLine(
+            (SCREEN_WIDTH - w) / 2 + x - 1,
+            h + 2,
+            (SCREEN_WIDTH - w) / 2 + x + 1,
+            h + 2,
+            screen_front_color);
         break;
     default:
         Abort("Keyboard mode unrecognized");
         break;
-    }
-    if (ks_data->active) {
-        UG_DrawLine(
-            (SCREEN_WIDTH - w) / 2 + 1,
-            h + 2,
-            (SCREEN_WIDTH + w) / 2 - 1,
-            h + 2,
-            screen_front_color);
     }
 }
 
@@ -116,14 +131,12 @@ static void _on_event(const event_t* event, component_t* component)
     case EVENT_TOP_CONTINUOUS_TAP:
         if (ks_data->location == top_slider && slider_data->position > SLIDER_POSITION_ONE_THIRD &&
             slider_data->position <= SLIDER_POSITION_TWO_THIRD) {
-            ks_data->active = true;
             break;
         }
         /* FALLTHROUGH */
     case EVENT_TOP_SHORT_TAP:
         if (ks_data->location == top_slider && slider_data->position > SLIDER_POSITION_ONE_THIRD &&
             slider_data->position <= SLIDER_POSITION_TWO_THIRD) {
-            ks_data->active = false;
             event_t e;
             e.id = EVENT_TOGGLE_ALPHANUMERIC;
             emit_event(&e);
@@ -131,7 +144,6 @@ static void _on_event(const event_t* event, component_t* component)
         }
         /* FALLTHROUGH */
     default:
-        ks_data->active = false;
         break;
     }
 }
@@ -168,7 +180,6 @@ component_t* keyboard_switch_create(
 
     ks_data->location = location;
     ks_data->mode = LOWER_CASE;
-    ks_data->active = false;
     ks_data->special_chars = special_chars;
 
     keyboard_switch->data = ks_data;
