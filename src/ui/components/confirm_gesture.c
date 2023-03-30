@@ -114,7 +114,7 @@ static void _on_event(const event_t* event, component_t* component)
         data->active_top = false;
         break;
     case EVENT_TOP_CONTINUOUS_TAP:
-        if (slider_data->position > SLIDER_POSITION_TWO_THIRD &&
+        if (slider_data->position > SLIDER_POSITION_RIGHT_BUTTON_BORDER &&
             slider_data->position <= MAX_SLIDER_POS) {
             data->active_top = true;
         }
@@ -126,7 +126,7 @@ static void _on_event(const event_t* event, component_t* component)
         data->active_bottom = false;
         break;
     case EVENT_BOTTOM_CONTINUOUS_TAP:
-        if (slider_data->position > SLIDER_POSITION_TWO_THIRD &&
+        if (slider_data->position > SLIDER_POSITION_RIGHT_BUTTON_BORDER &&
             slider_data->position <= MAX_SLIDER_POS) {
             data->active_bottom = true;
         }

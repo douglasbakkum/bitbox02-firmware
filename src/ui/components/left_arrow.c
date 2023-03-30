@@ -68,7 +68,7 @@ static void _on_event(const event_t* event, component_t* component)
         if (data->location == bottom_slider && event->id == EVENT_TOP_SHORT_TAP) {
             break;
         }
-        if (slider_data->position <= SLIDER_POSITION_ONE_THIRD) {
+        if (slider_data->position <= SLIDER_POSITION_LEFT_BUTTON_BORDER) {
             data->active = false;
             event_t e;
             e.id = EVENT_BACKWARD;
@@ -84,7 +84,7 @@ static void _on_event(const event_t* event, component_t* component)
         if (data->location == bottom_slider && event->id == EVENT_TOP_CONTINUOUS_TAP) {
             break;
         }
-        if (slider_data->position <= SLIDER_POSITION_ONE_THIRD) {
+        if (slider_data->position <= SLIDER_POSITION_LEFT_BUTTON_BORDER) {
             data->active = true;
             break;
         }

@@ -130,13 +130,13 @@ static void _on_event(const event_t* event, component_t* component)
     switch (data->type) {
     case ICON_BUTTON_CHECK:
     case ICON_BUTTON_NEXT:
-        if (slider_data->position < SLIDER_POSITION_TWO_THIRD) {
+        if (slider_data->position < SLIDER_POSITION_RIGHT_BUTTON_BORDER) {
             data->active = false;
             return;
         }
         break;
     case ICON_BUTTON_CROSS:
-        if (slider_data->position >= SLIDER_POSITION_ONE_THIRD) {
+        if (slider_data->position >= SLIDER_POSITION_LEFT_BUTTON_BORDER) {
             data->active = false;
             return;
         }
